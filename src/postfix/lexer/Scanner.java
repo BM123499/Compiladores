@@ -77,7 +77,7 @@ public class Scanner {
 		else if (Regex.isId(token))
 			ret = new Token(TokenType.ID, token);
 		else
-			throw new LexError(token);
+			throw new LexError("Unexpected character: "+token);
 		return ret;
 	}
 }
