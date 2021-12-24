@@ -17,16 +17,30 @@
 package postfix.interpreter;
 
 import postfix.ast.Expr;
+import java.util.HashMap;
 
 /**
  * @author Henrique Rebelo
  */
 public class Interpreter implements Expr.Visitor<Integer> {
 
+	public final HashMap<String, String> env;
+  	public Interpreter(HashMap<String, String> env){this.env = env; this.env.put("y", "10");}
+
 	public int interp(Expr expression) { 
 		int value = evaluate(expression);
 		
 		return value;
+	}
+
+	@Override
+	public Integer visitIdExpr(Expr.Id expr) {
+		try {
+			return Integer.parseInt(env.get(expr.value));
+		}
+		catch (Exception e) {
+			throw new InterError("O identificador '" + expr.value + "' não é reconhecido.");
+		}
 	}
 
 	@Override
@@ -36,22 +50,29 @@ public class Interpreter implements Expr.Visitor<Integer> {
 
 	@Override
 	public Integer visitBinopExpr(Expr.Binop expr) {
-		int left = evaluate(expr.left);
 		int right = evaluate(expr.right); 
 		int result = 0;
 
 		switch (expr.operator.type) {
 		case PLUS:
-			result = left + right;
+			result = evaluate(expr.left) + right;
 			break;
 		case MINUS:
-			result = left - right;
+			result = evaluate(expr.left) - right;
 			break;
 		case SLASH:
-			result = left / right;
+			result = evaluate(expr.left) / right;
 			break;
 		case STAR:
-			result = left * right;
+			result = evaluate(expr.left) * right;
+			break;
+		case EQUAL:
+			if (expr.left.getClass().getName().equals("postfix.ast.Expr$Id")) {
+				env.put(((Expr.Id)expr.left).value, Integer.toString(right));
+				result = right;
+			}
+			else
+				throw new InterError("Esperado um idenficador no operando esquerdo.");
 			break;
 		default:
 			break;

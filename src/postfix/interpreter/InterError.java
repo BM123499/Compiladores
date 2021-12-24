@@ -14,21 +14,15 @@
  *     http://www.cin.ufpe.br/~hemr/
  * ******************************************************************/
 
-package postfix.lexer;
+package postfix.interpreter;
 
 /**
  * @author Henrique Rebelo
  */
-public enum TokenType {
+public class InterError extends RuntimeException{
+	private static final long serialVersionUID = 1L;
 
-	// Literals.
-	NUM,
-
-	// Single-character tokens for operations.
-	MINUS, PLUS, SLASH, STAR, EQUAL,
-
-	ID,
-	
-	EOF
-
+	public InterError(String msg) {
+		super(msg);
+	}
 }

@@ -27,18 +27,21 @@ import java.util.List;
 import postfix.ast.AstPrinter;
 import postfix.ast.Expr;
 import postfix.interpreter.Interpreter;
+import postfix.interpreter.InterError;
 import postfix.lexer.LexError;
 import postfix.lexer.Scanner;
 import postfix.lexer.Token;
 import postfix.parser.Parser;
 import postfix.parser.ParserError;
 
+import java.util.HashMap;
+
 /**
  * @author Henrique Rebelo
  */
 public class Postfix {
 
-	private static final Interpreter interpreter = new Interpreter();
+	private static final Interpreter interpreter = new Interpreter(new HashMap<String, String>());
 	private static boolean hasError = false;
 	private static boolean debugging = false;
 
@@ -114,15 +117,21 @@ public class Postfix {
 			if(debugging) {
 				printAST(expr);
 			}
+
 			System.out.println(interpreter.interp(expr));
-		} catch (LexError e) {
+		}
+		catch (LexError e) {
 			error("Lex", e.getMessage());
 			hasError = true;
-		}	
+		}
 		catch (ParserError e) {
 			error("Parser", e.getMessage());
 			hasError = true;
-		}	
+		}
+		catch (InterError e) {
+			error("Interpreter", e.getMessage());
+			hasError = true;
+		}
 	}
 
 	// -------------------------------------------------------------

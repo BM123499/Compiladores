@@ -23,11 +23,13 @@ public class Regex {
 	// regex for literals recognition
 	private static final String NUM_REGEX = "(\\d)+"; // short for [0-9]
 	// regex for single-character operation recognition.
-	private static final String OP_REGEX = "(\\+|-|\\*|/)"; // recognizes as an operation
+	private static final String OP_REGEX = "(\\+|-|\\*|/|=)"; // recognizes as an operation
 	private static final String PLUS_REGEX = "(\\+)"; // for plus operation recognition
 	private static final String MINUS_REGEX = "(\\-)"; // for minus operation recognition
 	private static final String SLASH_REGEX = "(/)"; // for div operation recognition
 	private static final String STAR_REGEX = "(\\*)"; // for mult operation recognition
+	private static final String EQUAL_REGEX = "(=)"; // for equal operation recognition
+	private static final String ID_REGEX = "([a-zA-Z][a-zA-Z0-9]*)"; // recognizes an ID
 	
 	public static boolean isNum(String token) {
 		return token.matches(NUM_REGEX);
@@ -35,6 +37,10 @@ public class Regex {
 	
 	public static boolean isOP(String token) {
 		return token.matches(OP_REGEX);
+	}
+
+	public static boolean isId(String token) {
+		return token.matches(ID_REGEX);
 	}
 	
 	public static boolean isPlus(String token) {
@@ -51,6 +57,10 @@ public class Regex {
 	
 	public static boolean isStar(String token) {
 		return token.matches(STAR_REGEX);
+	}
+
+	public static boolean isEqual(String token) {
+		return token.matches(EQUAL_REGEX);
 	}
 	
 	/**
@@ -72,6 +82,9 @@ public class Regex {
 		}
 		else if(isStar(token)) {
 			tokenType = TokenType.STAR;
+		}
+		else if(isEqual(token)) {
+			tokenType = TokenType.EQUAL;
 		}
 		
 		return tokenType;
